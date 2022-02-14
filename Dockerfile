@@ -10,6 +10,8 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends build-essential libpq-dev
 RUN python -m pip install --upgrade pip
+# Require to build 
+RUN pip install wheel
 
 # Install runtime deps
 COPY requirements.txt /tmp/requirements.txt
