@@ -1,5 +1,5 @@
 # Build image
-FROM python:3.7-slim as builder
+FROM python:3.7-bullseye-slim as builder
 
 # Setup virtualenv
 ENV VIRTUAL_ENV=/opt/venv
@@ -8,7 +8,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Install build deps
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends build-essential
+RUN apt-get install -y --no-install-recommends build-essential libpq-dev
 RUN python -m pip install --upgrade pip
 
 # Install runtime deps
@@ -22,7 +22,7 @@ RUN pip install pylightning
 RUN pip install lndgrpc
 
 # Production image
-FROM python:3.7-slim as lnbits
+FROM python:3.7-bullseye-slim as lnbits
 
 # Run as non-root
 USER 1000:1000
