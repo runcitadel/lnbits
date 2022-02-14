@@ -23,6 +23,9 @@ RUN pip install pylightning
 # Install LND specific deps
 RUN pip install lndgrpc
 
+# Install ngrok specific deps
+RUN pip install pyngrok
+
 # Production image
 FROM python:3.7-slim-bullseye as lnbits
 
