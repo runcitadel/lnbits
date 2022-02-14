@@ -1,5 +1,5 @@
 # Build image
-FROM python:3.7-bullseye-slim as builder
+FROM python:3.7-bullseye as builder
 
 # Setup virtualenv
 ENV VIRTUAL_ENV=/opt/venv
@@ -22,7 +22,7 @@ RUN pip install pylightning
 RUN pip install lndgrpc
 
 # Production image
-FROM python:3.7-bullseye-slim as lnbits
+FROM python:3.7-slim-bullseye as lnbits
 
 # Run as non-root
 USER 1000:1000
