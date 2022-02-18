@@ -6,7 +6,9 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: pip3 install -r requirements.txt
       - uses: jpetrucciani/mypy-check@master
         with:
           path: lnbits
