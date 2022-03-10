@@ -148,7 +148,7 @@ async def get_key_type(
     try:
         checker = WalletInvoiceKeyChecker(api_key=token)
         await checker.__call__(r)
-        wallet = WalletTypeInfo(0, checker.wallet)
+        wallet = WalletTypeInfo(1, checker.wallet)
         user = await get_user(wallet.wallet.user)
         if (LNBITS_ADMIN_EXTENSIONS and pathname in LNBITS_ADMIN_EXTENSIONS) and not user.admin:
            raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="User not authorized.")
