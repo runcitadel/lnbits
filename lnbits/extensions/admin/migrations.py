@@ -8,7 +8,10 @@ from lnbits.helpers import urlsafe_short_hash
 
 async def m001_create_admin_table(db):
     # users/server
-    user = conf.admin_users[0]
+    try:
+        user = conf.admin_users[0]
+    except:
+        user = "doesnotexist"
     admin_users = ",".join(conf.admin_users)
     allowed_users = ",".join(conf.allowed_users)
     admin_ext = ",".join(conf.admin_ext)
