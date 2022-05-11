@@ -6,10 +6,9 @@ from typing import Any, List, NamedTuple, Optional
 import jinja2
 import shortuuid  # type: ignore
 
+import lnbits.settings as settings
 from lnbits.jinja2_templating import Jinja2Templates
 from lnbits.requestvars import g
-
-import lnbits.settings as settings
 
 
 class Extension(NamedTuple):
@@ -25,6 +24,9 @@ class Extension(NamedTuple):
 
 class ExtensionManager:
     def __init__(self):
+        if settings.LNBITS_ADMIN_UI:
+            settings.LNBITS_DISABLED_EXTENSIONS = g().admin_conf.disabled_ext
+            settings.LNBITS_ADMIN_EXTENSIONS = g().admin_conf.admin_ext
         self._disabled: List[str] = settings.LNBITS_DISABLED_EXTENSIONS
         self._admin_only: List[str] = [x.strip(' ') for x in settings.LNBITS_ADMIN_EXTENSIONS]
         self._extension_folders: List[str] = [
@@ -153,8 +155,20 @@ def url_for(endpoint: str, external: Optional[bool] = False, **params: Any) -> s
     url = f"{base}{endpoint}{url_params}"
     return url
 
+def removeEmptyString(arr):
+    return list(filter(None, arr))
 
 def template_renderer(additional_folders: List = []) -> Jinja2Templates:
+    if(settings.LNBITS_ADMIN_UI):
+        _ = g().admin_conf
+        settings.LNBITS_AD_SPACE = _.ad_space
+        settings.LNBITS_HIDE_API = _.hide_api
+        settings.LNBITS_SITE_TITLE = _.site_title
+        settings.LNBITS_DENOMINATION = _.denomination
+        settings.LNBITS_SITE_TAGLINE = _.site_tagline
+        settings.LNBITS_SITE_DESCRIPTION = _.site_description
+        settings.LNBITS_THEME_OPTIONS = _.theme        
+    
     t = Jinja2Templates(
         loader=jinja2.FileSystemLoader(
             ["lnbits/templates", "lnbits/core/templates", *additional_folders]

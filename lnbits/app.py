@@ -13,18 +13,21 @@ from fastapi.staticfiles import StaticFiles
 import lnbits.settings
 from lnbits.core.tasks import register_task_listeners
 
-from .commands import db_migrate, handle_assets
+from .commands import db_migrate, get_admin_settings, handle_assets
+from .config import WALLET, conf
 from .core import core_app
 from .core.views.generic import core_html_routes
 from .helpers import (
     get_css_vendored,
     get_js_vendored,
     get_valid_extensions,
+    removeEmptyString,
     template_renderer,
     url_for_vendored,
 )
 from .requestvars import g
-from .settings import WALLET
+
+# from .settings import WALLET
 from .tasks import (
     catch_everything_and_restart,
     check_pending_payments,
@@ -40,6 +43,11 @@ def create_app(config_object="lnbits.settings") -> FastAPI:
     :param config_object: The configuration object to use.
     """
     app = FastAPI()
+    if lnbits.settings.LNBITS_ADMIN_UI:
+        g().admin_conf = conf
+        check_settings(app)
+
+    g().WALLET = WALLET
     app.mount("/static", StaticFiles(directory="lnbits/static"), name="static")
     app.mount(
         "/core/static", StaticFiles(directory="lnbits/core/static"), name="core_static"
@@ -50,7 +58,6 @@ def create_app(config_object="lnbits.settings") -> FastAPI:
     app.add_middleware(
         CORSMiddleware, allow_origins=origins, allow_methods=["*"], allow_headers=["*"]
     )
-
     g().config = lnbits.settings
     g().base_url = f"http://{lnbits.settings.HOST}:{lnbits.settings.PORT}"
 
@@ -80,6 +87,24 @@ def create_app(config_object="lnbits.settings") -> FastAPI:
 
     return app
 
+def check_settings(app: FastAPI):
+    @app.on_event("startup")
+    async def check_settings_admin():
+
+        while True:
+            admin_set = await get_admin_settings()
+            if admin_set :
+                break
+            print("ERROR:", admin_set)
+            await asyncio.sleep(5)
+            
+        admin_set.admin_users = removeEmptyString(admin_set.admin_users.split(','))
+        admin_set.allowed_users = removeEmptyString(admin_set.allowed_users.split(','))
+        admin_set.admin_ext = removeEmptyString(admin_set.admin_ext.split(','))
+        admin_set.disabled_ext = removeEmptyString(admin_set.disabled_ext.split(','))
+        admin_set.theme = removeEmptyString(admin_set.theme.split(','))
+        admin_set.ad_space = removeEmptyString(admin_set.ad_space.split(','))
+        g().admin_conf = conf.copy(update=admin_set.dict())
 
 def check_funding_source(app: FastAPI) -> None:
     @app.on_event("startup")

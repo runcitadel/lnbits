@@ -14,8 +14,10 @@ from lnbits.core import db
 from lnbits.core.models import User
 from lnbits.decorators import check_user_exists
 from lnbits.helpers import template_renderer, url_for
+from lnbits.requestvars import g
 from lnbits.settings import (
     LNBITS_ADMIN_LOGIN_KEY,
+    LNBITS_ADMIN_UI,
     LNBITS_ADMIN_USERS,
     LNBITS_ALLOWED_USERS,
     LNBITS_SITE_TITLE,
@@ -35,7 +37,6 @@ from ..crud import (
 from ..services import pay_invoice, redeem_lnurl_withdraw
 
 core_html_routes: APIRouter = APIRouter(tags=["Core NON-API Website Routes"])
-
 
 @core_html_routes.get("/favicon.ico", response_class=FileResponse)
 async def favicon():
@@ -112,6 +113,11 @@ async def wallet(
     service_fee = int(SERVICE_FEE) if int(SERVICE_FEE) == SERVICE_FEE else SERVICE_FEE
 
     is_admin: bool = LNBITS_ADMIN_LOGIN_KEY != "" and admin_key == LNBITS_ADMIN_LOGIN_KEY
+
+    if LNBITS_ADMIN_UI:
+        LNBITS_ADMIN_USERS = g().admin_conf.admin_users
+        LNBITS_ALLOWED_USERS = g().admin_conf.allowed_users
+
     if not user_id:
         user = await get_user((await create_account(is_admin=is_admin)).id)
     else:
