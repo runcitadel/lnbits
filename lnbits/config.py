@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     site_tagline: str = Field(default="free and open-source lightning wallet", env="LNBITS_SITE_TAGLINE")
     site_description: str = Field(default=None, env="LNBITS_SITE_DESCRIPTION")
     default_wallet_name: str = Field(default="LNbits wallet", env="LNBITS_DEFAULT_WALLET_NAME")
-    theme: List[str] = Field(default="classic, flamingo, mint, salvador, monochrome, autumn", env="LNBITS_THEME_OPTIONS")
+    theme: List[str] = Field(default=["classic", "flamingo", "mint", "salvador", "monochrome", "autumn"], env="LNBITS_THEME_OPTIONS")
     ad_space: List[str] = Field(default_factory=list, env="LNBITS_AD_SPACE")
     # .env
     env: Optional[str]
