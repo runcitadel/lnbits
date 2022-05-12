@@ -118,8 +118,11 @@ async def wallet(
     )
 
     if LNBITS_ADMIN_UI:
-        LNBITS_ADMIN_USERS = g().admin_conf.admin_users
-        LNBITS_ALLOWED_USERS = g().admin_conf.allowed_users
+        LOCAL_LNBITS_ADMIN_USERS = g().admin_conf.admin_users
+        LOCAL_LNBITS_ALLOWED_USERS = g().admin_conf.allowed_users
+    else:
+        LOCAL_LNBITS_ADMIN_USERS = LNBITS_ADMIN_USERS
+        LOCAL_LNBITS_ALLOWED_USERS = LNBITS_ALLOWED_USERS
 
     if not user_id:
         user = await get_user((await create_account(is_admin=is_admin)).id)
@@ -129,11 +132,11 @@ async def wallet(
             return template_renderer().TemplateResponse(
                 "error.html", {"request": request, "err": "User does not exist."}
             )
-        if LNBITS_ALLOWED_USERS and user_id not in LNBITS_ALLOWED_USERS:
+        if LOCAL_LNBITS_ALLOWED_USERS and user_id not in LOCAL_LNBITS_ALLOWED_USERS:
             return template_renderer().TemplateResponse(
                 "error.html", {"request": request, "err": "User not authorized."}
             )
-        if (LNBITS_ADMIN_USERS and user_id in LNBITS_ADMIN_USERS) or is_admin:
+        if (LOCAL_LNBITS_ADMIN_USERS and user_id in LOCAL_LNBITS_ADMIN_USERS) or is_admin:
             make_admin(user_id)
             user.admin = True
     if not wallet_id:
