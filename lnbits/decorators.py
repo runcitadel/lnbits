@@ -16,7 +16,6 @@ from lnbits.requestvars import g
 from lnbits.settings import (
     LNBITS_ADMIN_EXTENSIONS,
     LNBITS_ADMIN_UI,
-    LNBITS_ADMIN_USERS,
     LNBITS_ALLOWED_USERS,
 )
 
@@ -133,8 +132,6 @@ async def get_key_type(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 
     token = api_key_header if api_key_header else api_key_query
-    if LNBITS_ADMIN_UI:
-        LNBITS_ADMIN_USERS = g().admin_conf.admin_users
 
     try:
         checker = WalletAdminKeyChecker(api_key=token)
@@ -224,9 +221,9 @@ async def check_user_exists(usr: UUID4) -> User:
         )
 
     if LNBITS_ADMIN_UI:
-        LNBITS_ADMIN_USERS = g().admin_conf.admin_users
-        LNBITS_ALLOWED_USERS = g().admin_conf.allowed_users
-
+        LOCAL_LNBITS_ALLOWED_USERS = g().admin_conf.allowed_users
+    else:
+        LOCAL_LNBITS_ALLOWED_USERS = LNBITS_ALLOWED_USERS
     if LNBITS_ALLOWED_USERS and g().user.id not in LNBITS_ALLOWED_USERS:
         raise HTTPException(
             status_code=HTTPStatus.UNAUTHORIZED, detail="User not authorized."
