@@ -25,6 +25,7 @@ class UpdateAdminSettings(BaseModel):
     theme: str = Query(None)
     ad_space: str = Query(None)
 
+
 class Admin(BaseModel):
     # users
     user: str
@@ -52,6 +53,7 @@ class Admin(BaseModel):
     def from_row(cls, row: Row) -> "Admin":
         data = dict(row)
         return cls(**data)
+
 
 class Funding(BaseModel):
     id: str

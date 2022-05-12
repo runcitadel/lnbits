@@ -8,7 +8,7 @@ from environs import Env
 
 env = Env()
 env.read_env()
-  
+
 wallets_module = importlib.import_module("lnbits.wallets")
 wallet_class = getattr(
     wallets_module, env.str("LNBITS_BACKEND_WALLET_CLASS", default="VoidWallet")
@@ -31,7 +31,9 @@ LNBITS_ALLOWED_USERS: List[str] = env.list(
 LNBITS_ADMIN_UI = env.bool("LNBITS_ADMIN_UI", default=False)
 LNBITS_ADMIN_USERS: List[str] = env.list("LNBITS_ADMIN_USERS", default=[], subcast=str)
 LNBITS_ADMIN_LOGIN_KEY = env.str("LNBITS_ADMIN_LOGIN_KEY", default="", subcast=str)
-LNBITS_ADMIN_EXTENSIONS: List[str] = env.list("LNBITS_ADMIN_EXTENSIONS", default=[], subcast=str)
+LNBITS_ADMIN_EXTENSIONS: List[str] = env.list(
+    "LNBITS_ADMIN_EXTENSIONS", default=[], subcast=str
+)
 LNBITS_DISABLED_EXTENSIONS: List[str] = env.list(
     "LNBITS_DISABLED_EXTENSIONS", default=[], subcast=str
 )

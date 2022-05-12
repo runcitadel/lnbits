@@ -53,11 +53,12 @@ def bundle_vendored():
         with open(outputpath, "w") as f:
             f.write(output)
 
+
 async def get_admin_settings():
     from lnbits.extensions.admin.models import Admin
 
     async with core_db.connect() as conn:
-        
+
         if conn.type == SQLITE:
             exists = await conn.fetchone(
                 "SELECT * FROM sqlite_master WHERE type='table' AND name='admin'"
@@ -70,8 +71,9 @@ async def get_admin_settings():
             return False
 
         row = await conn.fetchone("SELECT * from admin")
-    
+
     return Admin(**row) if row else None
+
 
 async def migrate_databases():
     """Creates the necessary databases if they don't exist already; or migrates them."""

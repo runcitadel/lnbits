@@ -28,7 +28,9 @@ class ExtensionManager:
             settings.LNBITS_DISABLED_EXTENSIONS = g().admin_conf.disabled_ext
             settings.LNBITS_ADMIN_EXTENSIONS = g().admin_conf.admin_ext
         self._disabled: List[str] = settings.LNBITS_DISABLED_EXTENSIONS
-        self._admin_only: List[str] = [x.strip(' ') for x in settings.LNBITS_ADMIN_EXTENSIONS]
+        self._admin_only: List[str] = [
+            x.strip(" ") for x in settings.LNBITS_ADMIN_EXTENSIONS
+        ]
         self._extension_folders: List[str] = [
             x[1] for x in os.walk(os.path.join(settings.LNBITS_PATH, "extensions"))
         ][0]
@@ -155,11 +157,13 @@ def url_for(endpoint: str, external: Optional[bool] = False, **params: Any) -> s
     url = f"{base}{endpoint}{url_params}"
     return url
 
+
 def removeEmptyString(arr):
     return list(filter(None, arr))
 
+
 def template_renderer(additional_folders: List = []) -> Jinja2Templates:
-    if(settings.LNBITS_ADMIN_UI):
+    if settings.LNBITS_ADMIN_UI:
         _ = g().admin_conf
         settings.LNBITS_AD_SPACE = _.ad_space
         settings.LNBITS_HIDE_API = _.hide_api
@@ -167,8 +171,8 @@ def template_renderer(additional_folders: List = []) -> Jinja2Templates:
         settings.LNBITS_DENOMINATION = _.denomination
         settings.LNBITS_SITE_TAGLINE = _.site_tagline
         settings.LNBITS_SITE_DESCRIPTION = _.site_description
-        settings.LNBITS_THEME_OPTIONS = _.theme        
-    
+        settings.LNBITS_THEME_OPTIONS = _.theme
+
     t = Jinja2Templates(
         loader=jinja2.FileSystemLoader(
             ["lnbits/templates", "lnbits/core/templates", *additional_folders]
@@ -183,7 +187,9 @@ def template_renderer(additional_folders: List = []) -> Jinja2Templates:
     t.env.globals["SITE_DESCRIPTION"] = settings.LNBITS_SITE_DESCRIPTION
     t.env.globals["LNBITS_THEME_OPTIONS"] = settings.LNBITS_THEME_OPTIONS
     t.env.globals["LNBITS_VERSION"] = settings.LNBITS_COMMIT
-    t.env.globals["LNBITS_ADMIN_LOGIN_ENABLED"] = str(settings.LNBITS_ADMIN_LOGIN_KEY != "")
+    t.env.globals["LNBITS_ADMIN_LOGIN_ENABLED"] = str(
+        settings.LNBITS_ADMIN_LOGIN_KEY != ""
+    )
     t.env.globals["EXTENSIONS"] = get_valid_extensions()
 
     if settings.DEBUG:

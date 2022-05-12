@@ -32,11 +32,12 @@ from ..crud import (
     get_user,
     save_balance_notify,
     update_user_extension,
-    make_admin
+    make_admin,
 )
 from ..services import pay_invoice, redeem_lnurl_withdraw
 
 core_html_routes: APIRouter = APIRouter(tags=["Core NON-API Website Routes"])
+
 
 @core_html_routes.get("/favicon.ico", response_class=FileResponse)
 async def favicon():
@@ -112,7 +113,9 @@ async def wallet(
     admin_key = adm
     service_fee = int(SERVICE_FEE) if int(SERVICE_FEE) == SERVICE_FEE else SERVICE_FEE
 
-    is_admin: bool = LNBITS_ADMIN_LOGIN_KEY != "" and admin_key == LNBITS_ADMIN_LOGIN_KEY
+    is_admin: bool = (
+        LNBITS_ADMIN_LOGIN_KEY != "" and admin_key == LNBITS_ADMIN_LOGIN_KEY
+    )
 
     if LNBITS_ADMIN_UI:
         LNBITS_ADMIN_USERS = g().admin_conf.admin_users
@@ -239,7 +242,9 @@ async def lnurl_balance_notify(request: Request, service: str):
         redeem_lnurl_withdraw(bc.wallet, bc.url)
 
 
-@core_html_routes.get("/lnurlwallet", response_class=RedirectResponse, name="core.lnurlwallet")
+@core_html_routes.get(
+    "/lnurlwallet", response_class=RedirectResponse, name="core.lnurlwallet"
+)
 async def lnurlwallet(request: Request):
     async with db.connect() as conn:
         account = await create_account(conn=conn)

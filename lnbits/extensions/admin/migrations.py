@@ -17,7 +17,7 @@ async def m001_create_admin_table(db):
     admin_ext = ",".join(conf.admin_ext)
     disabled_ext = ",".join(conf.disabled_ext)
     funding_source = conf.funding_source
-    #operational
+    # operational
     data_folder = conf.data_folder
     database_url = conf.database_url
     force_https = conf.force_https
@@ -62,7 +62,7 @@ async def m001_create_admin_table(db):
     # if getenv("LNBITS_ADMIN_USERS"):
     #     admin_users = "".join(getenv("LNBITS_ADMIN_USERS").split())
     #     user = admin_users.split(',')[0]
-        
+
     # if getenv("LNBITS_DEFAULT_WALLET_NAME"):
     #     default_wallet_name = getenv("LNBITS_DEFAULT_WALLET_NAME")
 

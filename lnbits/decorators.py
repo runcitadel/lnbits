@@ -127,7 +127,7 @@ async def get_key_type(
     # 0: admin
     # 1: invoice
     # 2: invalid
-    pathname = r['path'].split('/')[1]
+    pathname = r["path"].split("/")[1]
 
     if not api_key_header and not api_key_query:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
@@ -141,8 +141,12 @@ async def get_key_type(
         await checker.__call__(r)
         wallet = WalletTypeInfo(0, checker.wallet)
         user = await get_user(wallet.wallet.user)
-        if (LNBITS_ADMIN_EXTENSIONS and pathname in LNBITS_ADMIN_EXTENSIONS) and not user.admin:
-            raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="User not authorized.")
+        if (
+            LNBITS_ADMIN_EXTENSIONS and pathname in LNBITS_ADMIN_EXTENSIONS
+        ) and not user.admin:
+            raise HTTPException(
+                status_code=HTTPStatus.UNAUTHORIZED, detail="User not authorized."
+            )
         return wallet
     except HTTPException as e:
         if e.status_code == HTTPStatus.BAD_REQUEST:
@@ -157,8 +161,12 @@ async def get_key_type(
         await checker.__call__(r)
         wallet = WalletTypeInfo(1, checker.wallet)
         user = await get_user(wallet.wallet.user)
-        if (LNBITS_ADMIN_EXTENSIONS and pathname in LNBITS_ADMIN_EXTENSIONS) and not user.admin:
-           raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="User not authorized.")
+        if (
+            LNBITS_ADMIN_EXTENSIONS and pathname in LNBITS_ADMIN_EXTENSIONS
+        ) and not user.admin:
+            raise HTTPException(
+                status_code=HTTPStatus.UNAUTHORIZED, detail="User not authorized."
+            )
         return wallet
     except HTTPException as e:
         if e.status_code == HTTPStatus.BAD_REQUEST:
@@ -214,7 +222,7 @@ async def check_user_exists(usr: UUID4) -> User:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail="User  does not exist."
         )
-    
+
     if LNBITS_ADMIN_UI:
         LNBITS_ADMIN_USERS = g().admin_conf.admin_users
         LNBITS_ALLOWED_USERS = g().admin_conf.allowed_users
