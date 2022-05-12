@@ -25,7 +25,7 @@ exit
 Download this repo and install the dependencies:
 
 ```sh
-git clone https://github.com/lnbits/lnbits-legend.git
+git clone https://github.com/runcitadel/lnbits-legend.git
 cd lnbits-legend/
 # ensure you have virtualenv installed, on debian/ubuntu 'apt install python3-venv' should work
 python3 -m venv venv
@@ -110,7 +110,7 @@ If you want to run LNbits on your Umbrel but want it to be reached through clear
 To install using docker you first need to build the docker image as:
 
 ```
-git clone https://github.com/lnbits/lnbits.git
+git clone https://github.com/runcitadel/lnbits-legend.git
 cd lnbits/ # ${PWD} referred as <lnbits_repo>
 docker build -t lnbits .
 ```

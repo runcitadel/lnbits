@@ -14,7 +14,7 @@ from .base import (
 
 
 class LNbitsWallet(Wallet):
-    """https://github.com/lnbits/lnbits"""
+    """https://github.com/runcitadel/lnbits-legend"""
 
     def __init__(self):
         self.endpoint = getenv("LNBITS_ENDPOINT")

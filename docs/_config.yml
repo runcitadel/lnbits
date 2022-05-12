@@ -6,6 +6,6 @@ search_enabled: true
 url: https://lnbits.org
 aux_links:
   "LNbits on GitHub":
-    - "//github.com/lnbits/lnbits"
+    - "//github.com/runcitadel/lnbits-legend"
   "lnbits.com":
     - "//lnbits.com"

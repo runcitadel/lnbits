@@ -25,7 +25,7 @@ The revenue will be sent to a wallet created specifically for that producer, wit
    ![adjust percentage](https://i.imgur.com/9weHKAB.jpg)
 3. For every different producer added, when adding tracks, a wallet is generated for them\
    ![producer wallet](https://i.imgur.com/YFIZ7Tm.jpg)
-4. On the bottom of the LNBits DJ Livestream extension you'll find the static QR code ([LNURL-pay](https://github.com/lnbits/lnbits/blob/master/lnbits/extensions/lnurlp/README.md)) you can add to the livestream or if you're a street performer you can print it and have it displayed
+4. On the bottom of the LNBits DJ Livestream extension you'll find the static QR code ([LNURL-pay](https://github.com/runcitadel/lnbits-legend/blob/master/lnbits/extensions/lnurlp/README.md)) you can add to the livestream or if you're a street performer you can print it and have it displayed
 5. After all tracks and producers are added, you can start "playing" songs\
    ![play tracks](https://i.imgur.com/7ytiBkq.jpg)
 6. You'll see the current track playing and a green icon indicating active track also\

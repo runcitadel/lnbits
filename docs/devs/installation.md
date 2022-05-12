@@ -10,7 +10,7 @@ nav_order: 1
 LNbits uses [Pipenv][pipenv] to manage Python packages.
 
 ```sh
-git clone https://github.com/lnbits/lnbits-legend.git
+git clone https://github.com/runcitadel/lnbits-legend.git
 cd lnbits-legend/
 
 sudo apt-get install pipenv

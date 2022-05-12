@@ -16,4 +16,4 @@ Monitor an extended public key and generate deterministic fresh public keys with
 4. You can then generate bitcoin onchain adresses from LNbits\
    ![onchain address](https://i.imgur.com/4KVSSJn.png)
 
-You can now use this wallet on the LNBits [SatsPayServer](https://github.com/lnbits/lnbits/blob/master/lnbits/extensions/satspay/README.md) extension
+You can now use this wallet on the LNBits [SatsPayServer](https://github.com/runcitadel/lnbits-legend/blob/master/lnbits/extensions/satspay/README.md) extension
