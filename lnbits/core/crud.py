@@ -55,6 +55,17 @@ async def make_admin(
         (True, user_id),
     )
 
+    try:
+        await (conn or db).execute(
+            """
+            UPDATE admin SET
+                user = ?
+            WHERE user = 'doesnotexist'
+            """,
+            (user_id),
+        )
+    except Exception:
+        pass
 
 async def get_user(user_id: str, conn: Optional[Connection] = None) -> Optional[User]:
     user = await (conn or db).fetchone(
