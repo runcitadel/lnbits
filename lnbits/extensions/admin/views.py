@@ -22,7 +22,9 @@ async def index(request: Request, user: User = Depends(check_user_exists)):
     admin = await get_admin()
     funding = [f.dict() for f in await get_funding()]
     error, balance = await g().WALLET.status()
-
+    settings = {}
+    if "admin_conf" in g():
+        settings = g().admin_conf.dict()
     return admin_renderer().TemplateResponse(
         "admin/index.html",
         {
@@ -30,7 +32,7 @@ async def index(request: Request, user: User = Depends(check_user_exists)):
             "user": user.dict(),
             "admin": admin.dict(),
             "funding": funding,
-            "settings": g().admin_conf.dict(),
+            "settings": settings,
             "balance": balance,
         },
     )
