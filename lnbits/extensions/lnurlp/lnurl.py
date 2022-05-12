@@ -31,8 +31,10 @@ async def api_lnurl_response(request: Request, link_id):
 
     rate = await get_fiat_rate_satoshis(link.currency) if link.currency else 1
 
+    callbackLink = request.url_for("lnurlp.api_lnurl_callback", link_id=link.id)
+    print(callbackLink)
     resp = LnurlPayResponse(
-        callback=request.url_for("lnurlp.api_lnurl_callback", link_id=link.id),
+        callback=callbackLink,
         min_sendable=math.ceil(link.min * rate) * 1000,
         max_sendable=round(link.max * rate) * 1000,
         metadata=link.lnurlpay_metadata,

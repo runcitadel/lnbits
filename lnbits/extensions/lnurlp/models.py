@@ -41,6 +41,7 @@ class PayLink(BaseModel):
 
     def lnurl(self, req: Request) -> str:
         url = req.url_for("lnurlp.api_lnurl_response", link_id=self.id)
+        print(url)
         return lnurl_encode(url)
 
     @property
