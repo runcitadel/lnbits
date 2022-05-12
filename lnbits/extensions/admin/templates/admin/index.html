@@ -1296,7 +1296,7 @@
         //console.log("this", this.data.admin)
         let data = {
           admin_users: admin_users.toString(),
-          allowed_users: allowed_users.toString(),
+          allowed_users: allowed_users?.toString() || "",
           admin_ext: admin_ext.toString(),
           disabled_ext: disabled_ext.toString(),
           funding_source,
