@@ -1,5 +1,5 @@
 # Build image
-FROM python:3.7-bullseye as builder
+FROM python:3.9-bullseye as builder
 
 # Setup virtualenv
 ENV VIRTUAL_ENV=/opt/venv
@@ -26,7 +26,7 @@ RUN pip install lndgrpc
 RUN pip install pyngrok
 
 # Production image
-FROM python:3.7-slim-bullseye as lnbits
+FROM python:3.9-slim-bullseye as lnbits
 
 # Run as non-root
 USER 1000:1000
