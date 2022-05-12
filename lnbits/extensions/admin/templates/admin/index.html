@@ -1295,10 +1295,10 @@
         } = this.data.admin
         //console.log("this", this.data.admin)
         let data = {
-          admin_users: admin_users.toString(),
+          admin_users: admin_users?.toString() || "",
           allowed_users: allowed_users?.toString() || "",
-          admin_ext: admin_ext.toString(),
-          disabled_ext: disabled_ext.toString(),
+          admin_ext: admin_ext?.toString() || "",
+          disabled_ext: disabled_ext?.toString() || "",
           funding_source,
           force_https,
           service_fee,
@@ -1308,8 +1308,8 @@
           site_description,
           default_wallet_name,
           denomination,
-          theme: theme.toString(),
-          ad_space: ad_space.toString()
+          theme: theme?.toString() || "",
+          ad_space: ad_space?.toString() || ""
         }
         //console.log(data)
         LNbits.api
