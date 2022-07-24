@@ -16,6 +16,7 @@ from lnbits.requestvars import g
 from lnbits.settings import (
     LNBITS_ADMIN_EXTENSIONS,
     LNBITS_ADMIN_UI,
+    LNBITS_ADMIN_USERS,
     LNBITS_ALLOWED_USERS,
 )
 

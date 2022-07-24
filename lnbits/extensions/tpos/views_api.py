@@ -2,6 +2,7 @@ from http import HTTPStatus
 
 from fastapi import Query
 from fastapi.params import Depends
+from loguru import logger
 from starlette.exceptions import HTTPException
 
 from lnbits.core.crud import get_user
@@ -52,7 +53,9 @@ async def api_tpos_delete(
 
 
 @tpos_ext.post("/api/v1/tposs/{tpos_id}/invoices", status_code=HTTPStatus.CREATED)
-async def api_tpos_create_invoice(amount: int = Query(..., ge=1), tpos_id: str = None):
+async def api_tpos_create_invoice(
+    amount: int = Query(..., ge=1), tipAmount: int = None, tpos_id: str = None
+):
     tpos = await get_tpos(tpos_id)
 
     if not tpos:
@@ -65,7 +68,7 @@ async def api_tpos_create_invoice(amount: int = Query(..., ge=1), tpos_id: str =
             wallet_id=tpos.wallet,
             amount=amount,
             memo=f"{tpos.name}",
-            extra={"tag": "tpos"},
+            extra={"tag": "tpos", "tipAmount": tipAmount, "tposId": tpos_id},
         )
     except Exception as e:
         raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e))
@@ -84,7 +87,8 @@ async def api_tpos_check_invoice(tpos_id: str, payment_hash: str):
         )
     try:
         status = await api_payment(payment_hash)
+
     except Exception as exc:
-        print(exc)
+        logger.error(exc)
         return {"paid": False}
     return status

@@ -212,16 +212,28 @@ async def get_wallet_for_key(
 
 
 async def get_standalone_payment(
-    checking_id_or_hash: str, conn: Optional[Connection] = None
+    checking_id_or_hash: str,
+    conn: Optional[Connection] = None,
+    incoming: Optional[bool] = False,
+    wallet_id: Optional[str] = None,
 ) -> Optional[Payment]:
+    clause: str = "checking_id = ? OR hash = ?"
+    values = [checking_id_or_hash, checking_id_or_hash]
+    if incoming:
+        clause = f"({clause}) AND amount > 0"
+
+    if wallet_id:
+        clause = f"({clause}) AND wallet = ?"
+        values.append(wallet_id)
+
     row = await (conn or db).fetchone(
-        """
+        f"""
         SELECT *
         FROM apipayments
-        WHERE checking_id = ? OR hash = ?
+        WHERE {clause}
         LIMIT 1
         """,
-        (checking_id_or_hash, checking_id_or_hash),
+        tuple(values),
     )
 
     return Payment.from_row(row) if row else None
