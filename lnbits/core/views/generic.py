@@ -59,9 +59,9 @@ async def home(request: Request, lightning: str = None):
 )
 async def extensions(
     request: Request,
-    user: User = Depends(check_user_exists),
-    enable: str = Query(None),
-    disable: str = Query(None),
+    user: User = Depends(check_user_exists),  # type: ignore
+    enable: str = Query(None),  # type: ignore
+    disable: str = Query(None),  # type: ignore
 ):
     extension_to_enable = enable
     extension_to_disable = disable
@@ -92,7 +92,7 @@ async def extensions(
 
     # Update user as his extensions have been updated
     if extension_to_enable or extension_to_disable:
-        user = await get_user(user.id)
+        user = await get_user(user.id)  # type: ignore
 
     return template_renderer().TemplateResponse(
         "core/extensions.html", {"request": request, "user": user.dict()}
@@ -115,9 +115,9 @@ nothing: create everything<br>
 )
 async def wallet(
     request: Request = Query(None),
-    nme: Optional[str] = Query(None),
-    usr: Optional[UUID4] = Query(None),
-    wal: Optional[UUID4] = Query(None),
+    nme: Optional[str] = Query(None),  # type: ignore
+    usr: Optional[UUID4] = Query(None),  # type: ignore
+    wal: Optional[UUID4] = Query(None),  # type: ignore
     adm: Optional[str] = Query(None),
 ):
     user_id = usr.hex if usr else None
@@ -139,7 +139,7 @@ async def wallet(
 
     if not user_id:
         user = await get_user((await create_account(is_admin=is_admin)).id)
-        logger.info(f"Create user {user.id}")
+        logger.info(f"Create user {user.id}")  # type: ignore
     else:
         user = await get_user(user_id)
         if not user:
@@ -154,22 +154,24 @@ async def wallet(
             make_admin(user_id)
             user.admin = True
     if not wallet_id:
-        if user.wallets and not wallet_name:
-            wallet = user.wallets[0]
+        if user.wallets and not wallet_name:  # type: ignore
+            wallet = user.wallets[0]  # type: ignore
         else:
-            wallet = await create_wallet(user_id=user.id, wallet_name=wallet_name)
+            wallet = await create_wallet(user_id=user.id, wallet_name=wallet_name)  # type: ignore
             logger.info(
-                f"Created new wallet {wallet_name if wallet_name else '(no name)'} for user {user.id}"
+                f"Created new wallet {wallet_name if wallet_name else '(no name)'} for user {user.id}"  # type: ignore
             )
 
         return RedirectResponse(
-            f"/wallet?usr={user.id}&wal={wallet.id}",
+            f"/wallet?usr={user.id}&wal={wallet.id}",  # type: ignore
             status_code=status.HTTP_307_TEMPORARY_REDIRECT,
         )
 
-    logger.debug(f"Access wallet {wallet_name}{'of user '+ user.id if user else ''}")
-    wallet = user.get_wallet(wallet_id)
-    if not wallet:
+    logger.debug(
+        f"Access {'user '+ user.id + ' ' if user else ''} {'wallet ' + wallet_name if wallet_name else ''}"
+    )
+    userwallet = user.get_wallet(wallet_id)  # type: ignore
+    if not userwallet:
         return template_renderer().TemplateResponse(
             "error.html", {"request": request, "err": "Wallet not found"}
         )
@@ -178,10 +180,10 @@ async def wallet(
         "core/wallet.html",
         {
             "request": request,
-            "user": user.dict(),
-            "wallet": wallet.dict(),
+            "user": user.dict(),  # type: ignore
+            "wallet": userwallet.dict(),
             "service_fee": service_fee,
-            "web_manifest": f"/manifest/{user.id}.webmanifest",
+            "web_manifest": f"/manifest/{user.id}.webmanifest",  # type: ignore
         },
     )
 
@@ -235,20 +237,20 @@ async def lnurl_full_withdraw_callback(request: Request):
 
 
 @core_html_routes.get("/deletewallet", response_class=RedirectResponse)
-async def deletewallet(request: Request, wal: str = Query(...), usr: str = Query(...)):
+async def deletewallet(request: Request, wal: str = Query(...), usr: str = Query(...)):  # type: ignore
     user = await get_user(usr)
-    user_wallet_ids = [u.id for u in user.wallets]
+    user_wallet_ids = [u.id for u in user.wallets]  # type: ignore
 
     if wal not in user_wallet_ids:
         raise HTTPException(HTTPStatus.FORBIDDEN, "Not your wallet.")
     else:
-        await delete_wallet(user_id=user.id, wallet_id=wal)
+        await delete_wallet(user_id=user.id, wallet_id=wal)  # type: ignore
         user_wallet_ids.remove(wal)
         logger.debug("Deleted wallet {wal} of user {user.id}")
 
     if user_wallet_ids:
         return RedirectResponse(
-            url_for("/wallet", usr=user.id, wal=user_wallet_ids[0]),
+            url_for("/wallet", usr=user.id, wal=user_wallet_ids[0]),  # type: ignore
             status_code=status.HTTP_307_TEMPORARY_REDIRECT,
         )
 
@@ -261,7 +263,7 @@ async def deletewallet(request: Request, wal: str = Query(...), usr: str = Query
 async def lnurl_balance_notify(request: Request, service: str):
     bc = await get_balance_check(request.query_params.get("wal"), service)
     if bc:
-        redeem_lnurl_withdraw(bc.wallet, bc.url)
+        await redeem_lnurl_withdraw(bc.wallet, bc.url)
 
 
 @core_html_routes.get(
@@ -271,7 +273,7 @@ async def lnurlwallet(request: Request):
     async with db.connect() as conn:
         account = await create_account(conn=conn)
         user = await get_user(account.id, conn=conn)
-        wallet = await create_wallet(user_id=user.id, conn=conn)
+        wallet = await create_wallet(user_id=user.id, conn=conn)  # type: ignore
 
     asyncio.create_task(
         redeem_lnurl_withdraw(
@@ -284,7 +286,7 @@ async def lnurlwallet(request: Request):
     )
 
     return RedirectResponse(
-        f"/wallet?usr={user.id}&wal={wallet.id}",
+        f"/wallet?usr={user.id}&wal={wallet.id}",  # type: ignore
         status_code=status.HTTP_307_TEMPORARY_REDIRECT,
     )
 

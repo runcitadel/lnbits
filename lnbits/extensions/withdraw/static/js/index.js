@@ -20,8 +20,11 @@ var mapWithdrawLink = function (obj) {
   obj.uses_left = obj.uses - obj.used
   obj.print_url = [locationPath, 'print/', obj.id].join('')
   obj.withdraw_url = [locationPath, obj.id].join('')
+  obj._data.use_custom = Boolean(obj.custom_url)
   return obj
 }
+
+const CUSTOM_URL = '/static/images/default_voucher.png'
 
 new Vue({
   el: '#vue',
@@ -59,13 +62,15 @@ new Vue({
         secondMultiplier: 'seconds',
         secondMultiplierOptions: ['seconds', 'minutes', 'hours'],
         data: {
-          is_unique: false
+          is_unique: false,
+          use_custom: false
         }
       },
       simpleformDialog: {
         show: false,
         data: {
           is_unique: true,
+          use_custom: false,
           title: 'Vouchers',
           min_withdrawable: 0,
           wait_time: 1
@@ -106,19 +111,20 @@ new Vue({
     },
     closeFormDialog: function () {
       this.formDialog.data = {
-        is_unique: false
+        is_unique: false,
+        use_custom: false
       }
     },
     simplecloseFormDialog: function () {
       this.simpleformDialog.data = {
-        is_unique: false
+        is_unique: false,
+        use_custom: false
       }
     },
     openQrCodeDialog: function (linkId) {
       var link = _.findWhere(this.withdrawLinks, {id: linkId})
 
       this.qrCodeDialog.data = _.clone(link)
-      console.log(this.qrCodeDialog.data)
       this.qrCodeDialog.data.url =
         window.location.protocol + '//' + window.location.host
       this.qrCodeDialog.show = true
@@ -134,6 +140,14 @@ new Vue({
       })
       var data = _.omit(this.formDialog.data, 'wallet')
 
+      if (!data.use_custom) {
+        data.custom_url = null
+      }
+
+      if (data.use_custom && !data?.custom_url) {
+        data.custom_url = CUSTOM_URL
+      }
+
       data.wait_time =
         data.wait_time *
         {
@@ -141,7 +155,6 @@ new Vue({
           minutes: 60,
           hours: 3600
         }[this.formDialog.secondMultiplier]
-
       if (data.id) {
         this.updateWithdrawLink(wallet, data)
       } else {
@@ -158,6 +171,14 @@ new Vue({
       data.min_withdrawable = data.max_withdrawable
       data.title = 'vouchers'
       data.is_unique = true
+
+      if (!data.use_custom) {
+        data.custom_url = null
+      }
+
+      if (data.use_custom && !data?.custom_url) {
+        data.custom_url = '/static/images/default_voucher.png'
+      }
 
       if (data.id) {
         this.updateWithdrawLink(wallet, data)
@@ -181,7 +202,8 @@ new Vue({
             'uses',
             'wait_time',
             'is_unique',
-            'webhook_url'
+            'webhook_url',
+            'custom_url'
           )
         )
         .then(function (response) {
