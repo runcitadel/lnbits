@@ -34,7 +34,7 @@ async def api_lnurl_response(request: Request, link_id):
     callbackLink = request.url_for("lnurlp.api_lnurl_callback", link_id=link.id)
     resp = LnurlPayResponse(
         callback=callbackLink,
-        mmin_sendable=round(link.min * rate) * 1000,
+        min_sendable=round(link.min * rate) * 1000,
         max_sendable=round(link.max * rate) * 1000,
         metadata=link.lnurlpay_metadata,
     )
