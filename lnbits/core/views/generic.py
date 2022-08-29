@@ -33,9 +33,9 @@ from ..crud import (
     delete_wallet,
     get_balance_check,
     get_user,
+    make_admin,
     save_balance_notify,
     update_user_extension,
-    make_admin,
 )
 from ..services import pay_invoice, redeem_lnurl_withdraw
 
