@@ -1,5 +1,5 @@
 FROM python:3.9-slim
-RUN apt update && apt install -y curl gcc pkg-config make && apt clean && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install -y curl && apt clean && rm -rf /var/lib/apt/lists/*
 RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH="/root/.local/bin:$PATH"
 WORKDIR /app
